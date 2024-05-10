@@ -3,6 +3,7 @@ import morgan from "morgan";
 import { IncomingMessage, Server } from "http";
 import data from "./data";
 import formatDateOptions from "./formatDate";
+import setupMorgan from "./morgan";
 
 interface MorganRequest extends IncomingMessage {
   body: {
@@ -12,12 +13,7 @@ interface MorganRequest extends IncomingMessage {
 
 const app: Application = express();
 app.use(express.json());
-const logger = morgan("tiny");
-app.use(logger);
-morgan.token("body", (req: MorganRequest, res) => JSON.stringify(req.body));
-app.use(
-  morgan(":method :url :status :res[content-length]  :response-time ms - :body")
-);
+setupMorgan(app);
 
 app.get("/api/persons", (req: Request, res: Response) => {
   console.log("GET /");
