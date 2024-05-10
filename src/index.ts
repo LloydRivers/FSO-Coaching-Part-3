@@ -1,15 +1,9 @@
 import express, { Request, Response, Application } from "express";
-import morgan from "morgan";
-import { IncomingMessage, Server } from "http";
+import { IncomingMessage } from "http";
 import data from "./data";
 import formatDateOptions from "./formatDate";
 import setupMorgan from "./morgan";
-
-interface MorganRequest extends IncomingMessage {
-  body: {
-    query: String;
-  };
-}
+import startServer from "./startServer";
 
 const app: Application = express();
 app.use(express.json());
@@ -82,12 +76,6 @@ app.get("/info", (req: Request, res: Response) => {
 
   res.send(template);
 });
-
-const startServer = (port: number, app: Application): Server => {
-  return app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-};
 
 const port = 3001;
 startServer(port, app);
