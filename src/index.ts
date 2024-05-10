@@ -4,6 +4,7 @@ import data from "./data";
 import formatDateOptions from "./formatDate";
 
 const app: Application = express();
+app.use(express.json());
 
 app.get("/api/persons", (req: Request, res: Response) => {
   console.log("GET /");
@@ -36,6 +37,28 @@ app.delete("/api/persons/:id", (req: Request, res: Response) => {
   } else {
     res.status(404).send("Not found");
   }
+});
+app.post("/api/persons", (req: Request, res: Response) => {
+  const { name, number } = req.body;
+
+  if (!name || !number) {
+    return res.status(400).send("Name or number is missing");
+  }
+
+  const alreadyExists = data.some((person) => person.name === name);
+
+  if (alreadyExists) {
+    return res.status(400).send("Name must be unique");
+  }
+
+  const newPerson = {
+    id: Math.floor(Math.random() * 1000),
+    name,
+    number,
+  };
+
+  data.push(newPerson);
+  res.status(201).send(newPerson);
 });
 
 app.get("/info", (req: Request, res: Response) => {
