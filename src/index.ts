@@ -10,6 +10,17 @@ app.get("/api/persons", (req: Request, res: Response) => {
   res.send(data);
 });
 
+app.get("/api/persons/:id", (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const person = data.find((person) => person.id === id);
+
+  if (person) {
+    res.send(person);
+  } else {
+    res.status(404).send("Not found");
+  }
+});
+
 app.get("/info", (req: Request, res: Response) => {
   const formattedDate = formatDateOptions();
 
