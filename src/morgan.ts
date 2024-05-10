@@ -1,8 +1,9 @@
 import { Application } from "express";
 import { IncomingMessage } from "http";
 import morgan from "morgan";
-// I found thw answer to the type error here: https://dev.to/vassalloandrea/better-logs-for-expressjs-using-winston-and-morgan-with-typescript-516n
-
+/* I found the answer to the "IncomingMessage" type error here: 
+https://dev.to/vassalloandreabetter-logs-for-expressjs-using-winston-and-morgan-with-typescript-516n
+ */
 interface MorganRequest extends IncomingMessage {
   body: {
     query: String;
