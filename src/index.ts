@@ -1,10 +1,13 @@
 import express, { Request, Response, Application } from "express";
+import morgan from "morgan";
 import { Server } from "http";
 import data from "./data";
 import formatDateOptions from "./formatDate";
 
 const app: Application = express();
 app.use(express.json());
+const logger = morgan("tiny");
+app.use(logger);
 
 app.get("/api/persons", (req: Request, res: Response) => {
   console.log("GET /");
