@@ -1,11 +1,12 @@
 import express, { Request, Response, Application } from "express";
-import { IncomingMessage } from "http";
+import cors from "cors";
 import data from "./data";
 import formatDateOptions from "./formatDate";
 import setupMorgan from "./morgan";
 import startServer from "./startServer";
 
 const app: Application = express();
+app.use(cors());
 app.use(express.json());
 setupMorgan(app);
 
@@ -77,5 +78,6 @@ app.get("/info", (req: Request, res: Response) => {
   res.send(template);
 });
 
-const port = 3001;
+const port = parseInt(process.env.PORT || "3001", 10);
+
 startServer(port, app);
