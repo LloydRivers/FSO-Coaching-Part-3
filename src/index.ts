@@ -6,6 +6,7 @@ import setupMorgan from "./morgan";
 import startServer from "./startServer";
 
 const app: Application = express();
+app.use(express.static("dist"));
 app.use(cors());
 app.use(express.json());
 setupMorgan(app);
