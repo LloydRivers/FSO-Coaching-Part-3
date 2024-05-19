@@ -5,6 +5,7 @@ yarn-error.log
 
 # TypeScript
 *.tsbuildinfo
+.env
 
 # Build output
 build/
