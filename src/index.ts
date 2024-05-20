@@ -1,9 +1,21 @@
 import express, { Request, Response, Application } from "express";
+import Person from "./personSchema";
+import mongoose from "mongoose";
 import cors from "cors";
 import data from "./data";
 import formatDateOptions from "./formatDate";
 import setupMorgan from "./morgan";
 import startServer from "./startServer";
+import dotenv from "dotenv";
+
+dotenv.config();
+const userName = process.env.MONGODB_USERNAME;
+const password = process.env.MONGODB_PASSWORD;
+
+const url = `mongodb+srv://${userName}:${password}@cluster0.nnoxpyj.mongodb.net/`;
+
+mongoose.set("strictQuery", false);
+mongoose.connect(url);
 
 const app: Application = express();
 app.use(express.static("dist"));
@@ -11,61 +23,78 @@ app.use(cors());
 app.use(express.json());
 setupMorgan(app);
 
-app.get("/api/persons", (req: Request, res: Response) => {
-  console.log("GET /");
-  res.send(data);
-});
-
-app.get("/api/persons/:id", (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const person = data.find((person) => person.id === id);
-
-  if (person) {
-    res.send(person);
-  } else {
-    res.status(404).send("Not found");
+app.get("/api/persons", async (req: Request, res: Response) => {
+  try {
+    const persons = await Person.find({});
+    res.send(persons);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
   }
 });
 
-app.delete("/api/persons/:id", (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const person = data.find((person) => person.id === id);
-
-  if (person) {
-    data.splice(data.indexOf(person), 1);
-    /*
-    From Google: A 200 OK status code indicates that the resource has been removed and it will include a message for the client that describes the status. A 204 No Content status code indicates that the resource has been removed but there is no message body to further describe the action or the status.
-    */
-
-    // This will send back a message to the client
-    res.status(200).send(`Person with id ${id} deleted`);
-    // res.status(204).send(`Person with id ${id} deleted`);  This will send back an empty response
-    // res.status(204).end();  This will send back an empty response
-  } else {
-    res.status(404).send("Not found");
+app.get("/api/persons/:id", async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const person = await Person.findById(id);
+    if (person) {
+      res.send(person);
+    } else {
+      res.status(404).send("<h2>person not found</h2>");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("<h2>Internal server error</h2>");
   }
 });
-app.post("/api/persons", (req: Request, res: Response) => {
-  const { name, number } = req.body;
 
-  if (!name || !number) {
-    return res.status(400).send("Name or number is missing");
+app.delete("/api/persons/:id", async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    await Person.findByIdAndDelete(id);
+    res.status(204).end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("<h2>Internal server error</h2>");
   }
-
-  const alreadyExists = data.some((person) => person.name === name);
-
-  if (alreadyExists) {
-    return res.status(400).send("Name must be unique");
+});
+app.post("/api/persons", async (req: Request, res: Response) => {
+  try {
+    const { name, number } = req.body;
+    if (!name || !number) {
+      res.status(400).send("name or number is missing");
+      return;
+    } else {
+      const person = await Person.create({ name, number });
+      res.send(person);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
   }
+});
+app.put("/api/persons/:name", async (req: Request, res: Response) => {
+  try {
+    const name = req.params.name;
+    const { number } = req.body;
 
-  const newPerson = {
-    id: Math.floor(Math.random() * 1000),
-    name,
-    number,
-  };
+    const updatedPerson = await Person.findOneAndUpdate(
+      { name },
+      {
+        number,
+      },
+      { new: true }
+    );
 
-  data.push(newPerson);
-  res.status(201).send(newPerson);
+    if (updatedPerson) {
+      res.send(updatedPerson);
+    } else {
+      res.status(404).send("Person not found");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
 });
 
 app.get("/info", (req: Request, res: Response) => {

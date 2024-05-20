@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": " This is the repository for the exercises of part 3 of the Full Stack Open course",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "rimraf ./build && tsc",
-    "dev": "nodemon",
+    "dev": "nodemon --watch src --exec ts-node src/index.ts",
     "start": "npm run build && node ./build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
