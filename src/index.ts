@@ -9,6 +9,7 @@ import startServer from "./startServer";
 import dotenv from "dotenv";
 
 dotenv.config();
+// These new to be added in the Enviroment section on render.com
 const userName = process.env.MONGODB_USERNAME;
 const password = process.env.MONGODB_PASSWORD;
 
