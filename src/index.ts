@@ -1,5 +1,5 @@
 import express, { Request, Response, Application } from "express";
-import Person from "./3.9-3.10/models/person";
+import Person from "./models/person";
 import mongoose from "mongoose";
 import cors from "cors";
 import data from "./data";
