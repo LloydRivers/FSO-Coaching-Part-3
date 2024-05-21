@@ -50,13 +50,12 @@ router.post("/", async (req: Request, res: Response) => {
   try {
     const { name, number } = req.body;
     if (!name || !number) {
-      throw new Error("Name or number is missing");
+      res.status(400).json({ error: "All fields are required" });
     }
     const person = await Person.create({ name, number });
     res.send(person);
   } catch (error: unknown) {
-    console.log(error);
-    res.status(400).send("Name or number is missing");
+    res.status(400).send(error);
   }
 });
 
