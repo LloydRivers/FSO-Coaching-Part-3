@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
 interface CustomError extends Error {
   name: string;
@@ -14,10 +14,10 @@ const ErrorHandler = (
   console.error(error);
 
   switch (error.name) {
-    case "CastError":
-      return res.status(400).send({ error: "malformatted id" });
-    default:
-      next(error);
+  case 'CastError':
+    return res.status(400).send({ error: 'malformatted id' });
+  default:
+    next(error);
   }
 };
 

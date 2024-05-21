@@ -1,26 +1,26 @@
-import { Router, Request, Response, NextFunction } from "express";
-import Person from "../models/person";
+import { Router, Request, Response, NextFunction } from 'express';
+import Person from '../models/person';
 
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const persons = await Person.find({});
     res.send(persons);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal server error");
+    res.status(500).send('Internal server error');
   }
 });
 
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
     const person = await Person.findById(id);
     if (person) {
       res.send(person);
     } else {
-      res.status(404).send("<h2>Person not found</h2>");
+      res.status(404).send('<h2>Person not found</h2>');
     }
   } catch (error) {
     console.log(error);
@@ -29,13 +29,13 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.delete(
-  "/:id",
+  '/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
       const deletedPerson = await Person.findByIdAndDelete(id);
       if (!deletedPerson) {
-        res.status(404).send("<h2>Person not found</h2>");
+        res.status(404).send('<h2>Person not found</h2>');
         return;
       }
       res.status(204).end();
@@ -46,11 +46,11 @@ router.delete(
   }
 );
 
-router.post("/", async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     const { name, number } = req.body;
     if (!name || !number) {
-      res.status(400).json({ error: "All fields are required" });
+      res.status(400).json({ error: 'All fields are required' });
     }
     const person = await Person.create({ name, number });
     res.send(person);
@@ -59,7 +59,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:name", async (req: Request, res: Response) => {
+router.put('/:name', async (req: Request, res: Response) => {
   try {
     const name = req.params.name;
     const { number } = req.body;
@@ -71,11 +71,11 @@ router.put("/:name", async (req: Request, res: Response) => {
     if (updatedPerson) {
       res.send(updatedPerson);
     } else {
-      res.status(404).send("Person not found");
+      res.status(404).send('Person not found');
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal server error");
+    res.status(500).send('Internal server error');
   }
 });
 

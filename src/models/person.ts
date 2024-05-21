@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const validateNumber = [
   {
@@ -6,7 +6,7 @@ const validateNumber = [
       if (number.length < 8) {
         return false;
       }
-      const parts = number.split("-");
+      const parts = number.split('-');
       return (
         parts.length === 2 &&
         (parts[0].length === 2 || parts[0].length === 3) &&
@@ -39,6 +39,6 @@ const personSchema = new mongoose.Schema({
   },
 });
 
-const Person = mongoose.model("Person", personSchema);
+const Person = mongoose.model('Person', personSchema);
 
 export default Person;

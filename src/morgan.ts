@@ -6,14 +6,15 @@ https://dev.to/vassalloandreabetter-logs-for-expressjs-using-winston-and-morgan-
  */
 interface MorganRequest extends IncomingMessage {
   body: {
-    query: String;
+    query: string;
   };
 }
 
 const setupMorgan = (app: Application): void => {
   const logger = morgan("tiny");
   app.use(logger);
-  morgan.token("body", (req: MorganRequest, res) => JSON.stringify(req.body));
+  /* eslint-disable-next-line */
+  morgan.token("body", (req: MorganRequest, _) => JSON.stringify(req.body));
   app.use(
     morgan(
       ":method :url :status :res[content-length] - :response-time ms - :body"

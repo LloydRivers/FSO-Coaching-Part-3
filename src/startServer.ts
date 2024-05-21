@@ -1,5 +1,5 @@
-import { Application } from "express";
-import { Server } from "http";
+import { Application } from 'express';
+import { Server } from 'http';
 
 const startServer = (port: number, app: Application): Server => {
   return app.listen(port, () => {
